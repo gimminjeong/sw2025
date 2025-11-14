@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/postList.css">
+    <link rel="stylesheet" href="/css/home.css"> <!--헤더-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> <!--검색창 돋보기 모양-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/3.6.95/css/materialdesignicons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>게시물 목록</title>
+    <style>
+        
+        body{
+            font-family: 'Inter', sans-serif;
+        }
+        /* 로그인 체크 */
+        .wrap { 
+            display: absolute; 
+             /* 양쪽 끝으로 배치 */ 
+            align-items: center; 
+            padding: 100px 5px;
+            width: 100%; /* 전체 가로 사용 */ 
+        }
+        .left {
+            font-size: 13px;
+            font-weight: 600; 
+            size: 32;
+        }
+        .normal-button{
+            position: absolute;
+            padding: 4px 8px;
+            font-size: 13px;
+            border: none;
+            background: #3B489B;
+            color: white;
+            border-radius: 4px;
+        } 
+        select{
+            font-size: 13px;
+            border: none;
+            background: #3B489B;
+            color: white;
+            border-radius: 4px; 
+        }
+        .group{/* 회색배경 */
+            background-color: #F7F7F7;
+            text-align: center;
+
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: None;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .actions button {
+            margin-right: 5px;
+        }
+        .announcement{
+            background-color: #FFFFFF;
+            
+        }
+        .search-box {
+            display: flex;            /* ★ 핵심 */
+            align-items: center;      /* 세로 중앙 정렬 */
+            height: 55px;
+            width: 383px;
+            background-color: white;
+            border-radius: 40px;
+            padding: 0 10px;          /* 좌우 여백 */
+            border: 1px solid #D9D9D9;
+            box-sizing: border-box;
+        }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        background: none;
+        font-size: 20px;
+        flex: 1;                  /* 남은 공간 채우기 */
+        padding: 0 10px;
+    }
+
+    .search-box button {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 50%;
+        background: #fff;
+        cursor: pointer;
+        display: flex;            /* 아이콘 중앙 정렬 */
+        justify-content: center;
+        align-items: center;
+    }
+
+    </style>
+</head>
+
+<body>
+<!--헤더-->
+
+<header class="main-header" style="width: 100%; background:white;">
+ 
+    <div style="width:100%; border-bottom:1px solid #D9D9D9">
+
+        <!-- 상단바 내부 내용 (폭 제한) -->
+        <div class="top-bar" 
+            style="
+                display:flex; 
+                align-items:center; 
+                
+                background:white; 
+                padding:10px 0;
+            "
+        >
+            <!-- 왼쪽: 연락처 -->
+            <div style="display:flex; gap:30px; color:#444449;">
+                <span style="font-size:15px; padding: 0px 0px 0px 400px;">
+                    <i class="fa-regular fa-envelope"></i> swdesign@donga.ac.kr
+                </span>
+                <span style="font-size:15px;">
+                    <i class="fa-solid fa-phone"></i> +82 1234 1234
+                </span>
+            </div>
+            <div style="padding: 0px 390px 0px 0px">
+            <!-- 오른쪽: 로그인 버튼 -->
+            <% if (user) { %>
+                <a href="/logout">
+                <button style="
+                    background:#3B489B; 
+                    width:100px; 
+                    height:60px; 
+                    color:white; 
+                    border:none;
+                    cursor:pointer;
+                ">
+                    Logout
+                </button>
+            </a>
+            
+        <% } else { %>
+            <a href="/login">
+                <button style="
+                    background:#3B489B; 
+                    width:100px; 
+                    height:60px; 
+                    color:white; 
+                    border:none;
+                    cursor:pointer;
+                ">
+                    Login
+                </button>
+            </a>
+            <% } %>
+        </div>
+    </div>
+
+
+    <div style="width:100%; border-bottom:1px solid #CFD6D9">
+
+        <nav class="navbar" 
+            style="
+                display:flex; 
+                justify-content:space-between; 
+                align-items:center; 
+                padding: 10px 0;
+                max-width:1160px; 
+                margin: 0 auto;
+            "
+        >
+
+            <!-- 로고 -->
+            <div>
+                <a href="/">
+                    <img src="/images/Donga_logo1.png" alt="logo" style="height:60px;">
+                </a>
+            </div>
+
+            <!-- 메뉴 -->
+            <ul style="display:flex; list-style:none; gap:40px; align-items:center; margin:0;">
+                
+                <!-- FAQ with dropdown -->
+                <li style="position:relative;">
+                    <a href="#" style="color:#333; font-weight:600;">FAQ</a>
+
+                    <ul style="
+                        position:absolute; 
+                        top:28px; 
+                        left:0; 
+                        list-style:none; 
+                        background:white; 
+                        padding:8px 0; 
+                        width:150px; 
+                        display:none; 
+                        box-shadow:0 2px 8px rgba(0,0,0,0.1);
+                    ">
+                        <li>
+                            <a href="/faq" style="display:block; padding:8px 15px;">
+                                FAQ 작성
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" style="display:block; padding:8px 15px;">
+                                자주 묻는 질문
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Guide Page -->
+                <li>
+                    <a href="/guide" style="color:#333; font-weight:600;">Guide Page</a>
+                </li>
+            </ul>
+
+        </nav>
+    </div>
+
+</header>
+
+
+
+<div class ="wrap" style="align-items:center; max-width: 1215px; margin: 0 auto; padding: 25px;">
+    <!-- 로그인 상태 표시 -->
+    <span class="up"><!--로그인 확인 & search 검색창-->
+        <% if (user) { %>
+            <span style="font-size:40px">안녕하세요, <%= user.Name %>님!</span>
+        <% } else { %>
+            <span style="font-size:40px">로그인되지 않았습니다.</span>
+            <% } %>
+        <form class="search-box" action="" method="get" style="display:flex; align-items:center; float:right;">
+        
+        <input 
+        type="text" 
+        name="q" 
+        placeholder="Search" 
+        >
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </span>
+    <br>
+    <!--게시물 작성버튼 && 정렬-->
+    <div style="padding:10px;">
+    <span><a style="color: white;"href="/post/new"><button style="width: 90.33px; height: 45.96px; font-size:15px" class="normal-button">게시물 작성</button></a></span>
+        <select style="width: 110px; height: 45.96px; float:right; font-size:15px;">
+            <option><button>정렬</button></option>
+        </select>
+    </div>
+</div>
+
+<%
+    const pageSize = 5;
+    const totalPages = Math.ceil(post.length / pageSize);
+
+    const pages = [];
+    for(let i = 0; i < totalPages; i++){
+        pages.push(post.slice(i * pageSize, (i + 1) * pageSize));
+    }
+
+    const currentPage = parseInt(typeof query !== 'undefined' && query.page ? query.page : 1);
+    const currentPosts = pages[currentPage - 1]; // 0-index
+%>
+
+
+<!-- 회색 배경 전체 박스 -->
+<div class="group" style="background:#F7F7F7; padding: 30px; max-width:1160px; margin:0 auto; display:flex; gap:20px; min-width: 1160px; max-width: 1160ox; min-height:650px; border-radius:12px;">
+
+    <div style="flex:1; background:white; padding:20px; border-radius:10px;">
+    <table style="width:100%; border-spacing: 0px 20px; border-collapse: separate;">
+    <tbody>
+        <% currentPosts.forEach(p => { %>
+            <tr style="background:white; border-radius:12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor:pointer; border:1px solid black; font-size: 20px;"
+                onclick="window.location='/post/detail/<%= p.Id %>';">
+                <td style="padding:25px; "><%= p.Title %></td>
+                <td style="padding:5px 0px 0px 200px"><%= p.Author %></td>
+                <td style="padding:25px;"><%= p.Created %></td>
+                <td style="padding:25px;"><%= p.Views %></td>
+            </tr>
+        <% }) %>
+    </tbody>
+
+        </table>
+    </div>
+
+    <!-- 공지사항 -->
+    <div class="announcement" 
+         style="width:226px; background:white; border-radius:10px;">
+        <div style="background-color:#F1F3FA; font-size:20px; padding:10px;">
+            공지사항
+        </div>
+        <table style="width:100%;">
+            <tbody>
+                공지가 없습니다.
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+    <div style="max-width:1160px; margin:0 auto; display:flex; padding: 10px;">
+        
+        <ul style="display:flex; list-style:none; gap: 10px;">
+            <li><a href="?page=<%=currentPage-1 %>"><button style="border: None;background-color: #F7F7F7; border-radius: 50%;height:35px; width:35px; font-size:18px"><</button></a></li>
+        
+        <% const currentPageNum = parseInt(currentPage) || 1; %>
+<% for(let i = 1; i <= totalPages; i++) { %>
+    <li>
+        <a href="?page=<%= i %>">
+            <button style="border:none; border-radius:50%; width:45px; height:45px;">
+                <%= i %>
+            </button>
+        </a>
+    </li>
+<% } %>
+<li><a href="?page=<%=currentPage+1 %>"><button style="border: None;background-color: #F7F7F7; border-radius: 50%;height:35px; width:35px; font-size:18px">></button></a></li>
+             </ul>
+        
+    </div>
+
+    <script>
+  // EJS가 서버에서 보낸 message 변수를 렌더링
+  const message = "<%= (typeof message !== 'undefined' && message) ? message : '' %>";
+
+  // 메시지가 존재할 때만 alert 띄우기
+  if (message) {
+    alert(message);
+  }
+</script>
+        
+</body>
+</html> 
